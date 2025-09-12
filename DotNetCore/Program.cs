@@ -1,4 +1,5 @@
 using DotNetCore.DI;
+using DotNetCore.Middlewares;
 using Lamar.Microsoft.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +40,9 @@ if (app.Environment.IsDevelopment())  // for security wise
 
 
 }
+
+app.UseMiddleware<ProfilingMiddleware>();
+app.UseMiddleware<RateLimitMiddleware>();
 
 app.UseHttpsRedirection();
 

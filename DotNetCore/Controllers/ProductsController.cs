@@ -13,9 +13,9 @@ namespace DotNetCore.Controllers
     [Route("api/[controller]")]
     public class ProductsController: ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<ProductsController> _logger;
         private readonly IProducts _products;
-        public ProductsController(ILogger<WeatherForecastController> logger, IProducts products)
+        public ProductsController(ILogger<ProductsController> logger, IProducts products)
         {
             _logger = logger;
             _products = products;
