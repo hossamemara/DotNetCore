@@ -10,6 +10,7 @@ namespace DotNetCore.DI
         public DIRegistry()
         {
             For<IWeatherForecast>().Use<WeatherForecastService>().Scoped();
+            For<IProducts>().Use<ProductsService>().Scoped();
         }
     }
 }
