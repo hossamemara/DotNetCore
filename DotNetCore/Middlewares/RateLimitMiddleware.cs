@@ -15,6 +15,7 @@
         }
         public async Task Invoke(HttpContext context)
         {
+            var localPort = context.Connection.LocalPort.ToString() ?? "unknown";
             _counter++;
             if (DateTime.Now.Subtract(_lastRequestDate).Seconds > WINDOW_SECONDS)
             {
@@ -29,7 +30,7 @@
 
                     _lastRequestDate = DateTime.Now;
                     context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-                    await context.Response.WriteAsync($"Rate Limit Exceeded");
+                    await context.Response.WriteAsync($"Rate Limit Exceeded at port {localPort}");
                 }
                 else
                 {
