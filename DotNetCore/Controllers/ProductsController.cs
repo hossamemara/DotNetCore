@@ -22,11 +22,11 @@ namespace DotNetCore.Controllers
         }
 
 
+        #region HttpGet
+
         #region Get Products
 
 
-        
-        
         [HttpGet("GetProducts")]
         public async Task<IActionResult> GetProducts()
         {
@@ -36,11 +36,11 @@ namespace DotNetCore.Controllers
                 var data = await _products.GetProducts();
                 if (data.Count() > 0)
                 {
-                    return Ok(new ApiResponse { Data = data, StatusCode = 200, AffectedRows = data.Count(), Message = "Data Found",HttpStatusCodes = "Success", ExistanceFlag=true });
+                    return Ok(new ApiResponse { Data = data, StatusCode = 200, AffectedRows = data.Count(), Message = "Data Found", HttpStatusCodes = "Success", ExistanceFlag = true });
                 }
                 else
                 {
-                    return NotFound(new ApiResponse { Data = data, StatusCode = 404, AffectedRows = 0, Message = "No Data Found", HttpStatusCodes = "Not Found", ExistanceFlag = false });
+                    return NotFound(new ApiResponse { StatusCode = 404, AffectedRows = 0, Message = "No Data Found", HttpStatusCodes = "Not Found", ExistanceFlag = false });
                 }
             }
             catch (Exception ex)
@@ -54,7 +54,44 @@ namespace DotNetCore.Controllers
 
 
         #endregion
-        
+
+
+        #region Get GetProducts By Filter
+
+
+        [HttpGet("GetProductsByFilter/{id}")]
+        public async Task<IActionResult> GetProductsByFilter(int id)
+        {
+            _logger.LogInformation("GetProductsByFilter");
+            try
+            {
+                var data = await _products.GetProductsByFilter(id);
+                if (data is not null)
+                {
+                    return Ok(new ApiResponse { Data = data, StatusCode = 200, AffectedRows = 1, Message = "Data Found", HttpStatusCodes = "Success", ExistanceFlag = true });
+                }
+                else
+                {
+                    return NotFound(new ApiResponse { StatusCode = 404, AffectedRows = 0, Message = "No Data Found", HttpStatusCodes = "Not Found", ExistanceFlag = false });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message.ToString());
+                return BadRequest(new ApiResponse { Error = ex.Message.ToString(), StatusCode = 400, HttpStatusCodes = "Bad Request" });
+            }
+
+
+        }
+
+
+        #endregion
+
+        #endregion
+
+
+        #region HttpPost
+
         #region Add Product
 
         [HttpPost("AddProduct")]
@@ -77,6 +114,10 @@ namespace DotNetCore.Controllers
 
         #endregion
 
+        #endregion
+
+
+        #region HttpPut
 
         #region Update Product
 
@@ -90,7 +131,7 @@ namespace DotNetCore.Controllers
                 var data = await _products.UpdateProduct(product);
                 if (data is not null)
                 {
-                    return Ok(new ApiResponse { Data = data, StatusCode = 200, AffectedRows = 1, HttpStatusCodes = "Success", ExistanceFlag = true, Message="Updated Successfully" });
+                    return Ok(new ApiResponse { Data = data, StatusCode = 200, AffectedRows = 1, HttpStatusCodes = "Success", ExistanceFlag = true, Message = "Updated Successfully" });
                 }
                 else
                 {
@@ -109,16 +150,21 @@ namespace DotNetCore.Controllers
         #endregion
 
 
+        #endregion
+
+
+        #region HttpDelete
+
         #region Delete Product
 
-        [HttpDelete("DeleteProduct")]
-        public async Task<IActionResult> DeleteProduct(Product product)
+        [HttpDelete("DeleteProduct{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
         {
 
             try
             {
 
-                var data = await _products.DeleteProduct(product);
+                var data = await _products.DeleteProduct(id);
                 if (data is not null)
                 {
                     return Ok(new ApiResponse { Data = data, StatusCode = 200, AffectedRows = 1, HttpStatusCodes = "Success", ExistanceFlag = true, Message = "Deleted Successfully" });
@@ -135,6 +181,9 @@ namespace DotNetCore.Controllers
 
 
         }
+
+
+        #endregion
 
 
         #endregion

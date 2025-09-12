@@ -11,7 +11,7 @@ namespace DotNetCore.Services
         private readonly ApplicationDBContext _context = context;
 
 
-        #region GetProducts
+        #region Get Products
 
         public async Task<IEnumerable<Product>> GetProducts()
         {
@@ -21,6 +21,16 @@ namespace DotNetCore.Services
 
         #endregion
 
+
+        #region Get Products By Filter
+
+        public async Task<Product?> GetProductsByFilter(int id)
+        {
+            var data = await _context.Set<Product>().FindAsync(id);
+            return data;
+        }
+
+        #endregion
 
 
         #region AddProduct
@@ -33,7 +43,6 @@ namespace DotNetCore.Services
         }
 
         #endregion
-
 
 
         #region UpdateProduct
@@ -60,9 +69,9 @@ namespace DotNetCore.Services
 
 
         #region DeleteProduct
-        public async Task<Product?> DeleteProduct(Product product)
+        public async Task<Product?> DeleteProduct(int id)
         {
-            var data = await _context.Set<Product>().FindAsync(product.Id);
+            var data = await _context.Set<Product>().FindAsync(id);
             if (data == null)
             {
                 return null;
