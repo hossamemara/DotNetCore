@@ -1,4 +1,7 @@
-﻿namespace DotNetCore.Middleware
+﻿using DotNetCore.ConfigurationClasses;
+using Microsoft.Extensions.Options;
+
+namespace DotNetCore.Middleware
 {
     public class RateLimitMiddleware
     {
@@ -6,18 +9,18 @@
         private readonly ILogger<ProfilingMiddleware> _logger;
         private static int _counter = 0;
         private static DateTime _lastRequestDate = DateTime.Now;
-        private const int LIMIT = 5; // Max 5 requests
-        private const int WINDOW_SECONDS = 10; // per 10 seconds
-        public RateLimitMiddleware(RequestDelegate next, ILogger<ProfilingMiddleware> logger)
+        private readonly IOptionsSnapshot<RateLimit> _optionsSnapshot;
+        public RateLimitMiddleware(RequestDelegate next, ILogger<ProfilingMiddleware> logger, IOptionsSnapshot<RateLimit> optionsSnapshot)
         {
             _next = next;
             _logger = logger;
+            _optionsSnapshot = optionsSnapshot;
         }
         public async Task Invoke(HttpContext context)
         {
             var localPort = context.Connection.LocalPort.ToString() ?? "unknown";
             _counter++;
-            if (DateTime.Now.Subtract(_lastRequestDate).Seconds > WINDOW_SECONDS)
+            if (DateTime.Now.Subtract(_lastRequestDate).Seconds > _optionsSnapshot.Value.Count)
             {
                 _counter = 1;
                 _lastRequestDate = DateTime.Now;
@@ -25,7 +28,7 @@
             }
             else
             {
-                if (_counter > LIMIT)
+                if (_counter > _optionsSnapshot.Value.Limit)
                 {
 
                     _lastRequestDate = DateTime.Now;
