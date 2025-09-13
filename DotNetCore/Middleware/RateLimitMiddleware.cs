@@ -1,4 +1,4 @@
-﻿namespace DotNetCore.Middlewares
+﻿namespace DotNetCore.Middleware
 {
     public class RateLimitMiddleware
     {

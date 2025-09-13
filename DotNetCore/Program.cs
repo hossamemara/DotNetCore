@@ -1,17 +1,23 @@
+using DotNetCore.ActionFilters;
 using DotNetCore.DI;
-using DotNetCore.Middlewares;
+using DotNetCore.Middleware;
 using Lamar.Microsoft.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    // for global action filter registration
+
+    options.Filters.Add<LogActivityFilter>(); 
+
+
+});
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi(); // new
-builder.Services.AddSwaggerGen(options =>
-{
-});
+builder.Services.AddSwaggerGen();
 
 builder.Host.UseLamar((context, registry) =>
 {
@@ -33,7 +39,7 @@ if (app.Environment.IsDevelopment())  // for security wise
 
     app.MapOpenApi(); // new 
     app.UseSwagger();
-    app.UseSwagger();
+    app.UseSwaggerUI();
 
 
     #endregion
@@ -41,6 +47,9 @@ if (app.Environment.IsDevelopment())  // for security wise
 
 }
 
+
+
+//  Middleware & action filter   https://chatgpt.com/share/e/68c53a88-bc5c-8001-9be6-80686b688b98 
 app.UseMiddleware<ProfilingMiddleware>();
 app.UseMiddleware<RateLimitMiddleware>();
 
@@ -49,5 +58,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseStaticFiles();
 
 app.Run();

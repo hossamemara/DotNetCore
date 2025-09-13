@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace DotNetCore.Middlewares
+namespace DotNetCore.Middleware
 {
     public class ProfilingMiddleware
     {

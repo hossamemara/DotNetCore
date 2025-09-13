@@ -1,4 +1,5 @@
-﻿using DotNetCore.DBContext;
+﻿using DotNetCore.ActionFilters;
+using DotNetCore.DBContext;
 using DotNetCore.Helpers;
 using DotNetCore.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,8 @@ namespace DotNetCore.Controllers
 
 
         [HttpGet("GetProducts")]
+        
+
         public async Task<IActionResult> GetProducts()
         {
             _logger.LogInformation("GetProducts");
@@ -60,6 +63,9 @@ namespace DotNetCore.Controllers
 
 
         [HttpGet("GetProductsByFilter/{id}")]
+
+        //  Middleware & action filter   https://chatgpt.com/share/e/68c53a88-bc5c-8001-9be6-80686b688b98 
+        [SensitiveLogActivity]
         public async Task<IActionResult> GetProductsByFilter(int id)
         {
             _logger.LogInformation("GetProductsByFilter");
