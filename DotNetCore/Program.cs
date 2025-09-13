@@ -4,7 +4,7 @@ using DotNetCore.Middleware;
 using Lamar.Microsoft.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Configuration.AddJsonFile("config.json");
 // Add services to the container.
 
 builder.Services.AddControllers(options =>

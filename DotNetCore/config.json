@@ -1,0 +1,3 @@
+﻿{
+  "SqlServerApp": "Server=.;Database=DotNetCore9;Trusted_Connection=True;trust server certificate=True"
+}

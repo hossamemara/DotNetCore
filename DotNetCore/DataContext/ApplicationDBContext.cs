@@ -12,7 +12,7 @@ namespace DotNetCore.DBContext
         public ApplicationDBContext(IConfiguration configuration)
         {
             _configuration = configuration;
-            _connectionString = _configuration.GetConnectionString("SqlServerApp");
+            _connectionString = _configuration["SqlServerApp"];
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
