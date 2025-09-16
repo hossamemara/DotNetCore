@@ -1,0 +1,19 @@
+﻿-- USE DotNetCore9
+
+-- CREATE DATABASE DotNetCore9
+
+
+CREATE TABLE Products(
+	Id INT PRIMARY KEY IDENTITY(1,1),
+	[Name] NVARCHAR(50) NOT NULL,
+	[SKU] NVARCHAR(50) NOT NULL UNIQUE
+)
+
+
+INSERT INTO DotNetCore9.dbo.Products(Name,SKU)
+VALUES('PC', 'PC123')
+
+
+SELECT * FROM DotNetCore9.dbo.Products
+
+

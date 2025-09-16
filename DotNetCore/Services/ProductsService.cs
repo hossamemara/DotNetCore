@@ -1,7 +1,5 @@
 ﻿using DotNetCore.DBContext;
-using DotNetCore.Helpers;
 using DotNetCore.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotNetCore.Services

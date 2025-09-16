@@ -6,18 +6,21 @@ namespace DotNetCore.DBContext
     {
 
         private readonly IConfiguration _configuration;
-        private readonly string? _connectionString;
-        
+        private readonly string? _connectionString_sql;
+        private readonly string? _connectionStringPostgresSQL;
+
 
         public ApplicationDBContext(IConfiguration configuration)
         {
             _configuration = configuration;
-            _connectionString = _configuration["SqlServerApp"];
+            _connectionString_sql = _configuration["ConnectionStrings:SqlServerApp"];
+            _connectionStringPostgresSQL = _configuration["ConnectionStrings:PostgresSQLServerApp"];
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_connectionString);
+            optionsBuilder.UseSqlServer(_connectionString_sql);
+            //optionsBuilder.UseNpgsql(_connectionStringPostgresSQL);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

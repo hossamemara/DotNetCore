@@ -3,9 +3,6 @@ using DotNetCore.DBContext;
 using DotNetCore.Helpers;
 using DotNetCore.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DotNetCore.Controllers
 {
