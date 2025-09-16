@@ -1,4 +1,5 @@
-﻿using DotNetCore.DBContext;
+﻿using DotNetCore.DataContext;
+using DotNetCore.DBContext;
 using DotNetCore.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,9 +12,9 @@ namespace DotNetCore.Services
 
         #region Get Products
 
-        public async Task<IEnumerable<Product>> GetProducts()
+        public async Task<IEnumerable<ProductsCollection>> GetProducts()
         {
-            var data = await _context.Set<Product>().ToListAsync();
+            var data = await _context.Set<ProductsCollection>().ToListAsync();
             return data;
         }
 

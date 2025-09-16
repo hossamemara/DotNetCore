@@ -1,22 +1,42 @@
 using DotNetCore.ActionFilters;
 using DotNetCore.ConfigurationClasses;
+using DotNetCore.DBContext;
 using DotNetCore.DI;
 using DotNetCore.Middleware;
 using Lamar.Microsoft.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
+
 
 var builder = WebApplication.CreateBuilder(args);
 //builder.Configuration.AddJsonFile("config.json");
 // Add services to the container.
 builder.Services.Configure<RateLimit>(builder.Configuration.GetSection("RateLimit"));
+builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection("ConnectionStrings"));
+var connectionString = builder.Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>()!;
+
 
 builder.Services.AddControllers(options =>
-{
+ {
     // for global action filter registration
 
     options.Filters.Add<LogActivityFilter>(); 
 
 
 });
+
+if (connectionString.DataBaseType == "MongoDb")
+{
+    builder.Services.AddSingleton<IMongoClient>(_ =>
+    new MongoClient(connectionString.MongoDb));
+
+    builder.Services.AddDbContext<ApplicationDBContext>((sp, options) =>
+    {
+        var client = sp.GetRequiredService<IMongoClient>();
+        var dbName = connectionString.MongoDatabaseName!;
+        options.UseMongoDB(client, dbName);
+    });
+}
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi(); // new
 builder.Services.AddSwaggerGen();
