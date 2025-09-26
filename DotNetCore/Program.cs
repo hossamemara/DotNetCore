@@ -1,11 +1,15 @@
 using DotNetCore.ActionFilters;
+using DotNetCore.Authorization;
 using DotNetCore.ConfigurationClasses;
 using DotNetCore.DBContext;
 using DotNetCore.DI;
 using DotNetCore.Middleware;
 using Lamar.Microsoft.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
+using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +17,27 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.Configure<RateLimit>(builder.Configuration.GetSection("RateLimit"));
 builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection("ConnectionStrings"));
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("jwtBearer"));
+
+var JwtConfig = builder.Configuration.GetSection("jwtBearer").Get<JwtOptions>();
+
+builder.Services.AddAuthentication().AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options=>
+{
+
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = JwtConfig.Issuer,
+        ValidateAudience = true,
+        ValidAudience= JwtConfig.Audience,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtConfig.SigningKey)),
+    };
+
+}
+    
+    );
 var connectionString = builder.Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>()!;
 
 
@@ -20,10 +45,11 @@ builder.Services.AddControllers(options =>
  {
     // for global action filter registration
 
-    options.Filters.Add<LogActivityFilter>(); 
+    options.Filters.Add<LogActivityFilter>();
+    options.Filters.Add<PermissionBasedAuthorizationFilter>();
 
 
-});
+ });
 
 if (connectionString.DataBaseType == "MongoDb")
 {

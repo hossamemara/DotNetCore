@@ -1,23 +1,22 @@
 ﻿using DotNetCore.ActionFilters;
+using DotNetCore.Authorization;
 using DotNetCore.DBContext;
+using DotNetCore.Entities;
 using DotNetCore.Helpers;
 using DotNetCore.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotNetCore.Controllers
 {
 
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
-    public class ProductsController: ControllerBase
+    public class ProductsController(ILogger<ProductsController> logger, IProducts products) : ControllerBase
     {
-        private readonly ILogger<ProductsController> _logger;
-        private readonly IProducts _products;
-        public ProductsController(ILogger<ProductsController> logger, IProducts products)
-        {
-            _logger = logger;
-            _products = products;
-        }
+        private readonly ILogger<ProductsController> _logger = logger;
+        private readonly IProducts _products = products;
 
 
         #region HttpGet
@@ -27,7 +26,6 @@ namespace DotNetCore.Controllers
 
         [HttpGet("GetProducts")]
         
-
         public async Task<IActionResult> GetProducts()
         {
             _logger.LogInformation("GetProducts");
@@ -58,12 +56,12 @@ namespace DotNetCore.Controllers
 
         #region Get GetProducts By Filter
 
-
+        [CheckPermission(Permission.ReadProduct)]
         [HttpGet("GetProductsByFilter/{id}")]
 
         //  Middleware & action filter   https://chatgpt.com/share/e/68c53a88-bc5c-8001-9be6-80686b688b98 
         [SensitiveLogActivity]
-        public async Task<IActionResult> GetProductsByFilter(int id)
+        public async Task<IActionResult> GetProductsByFilter([FromRoute] int id)
         {
             _logger.LogInformation("GetProductsByFilter");
             try
@@ -98,7 +96,7 @@ namespace DotNetCore.Controllers
         #region Add Product
 
         [HttpPost("AddProduct")]
-        public async Task<IActionResult> AddProduct(Product product)
+        public async Task<IActionResult> AddProduct([FromBody] Product product)
         {
 
             try
@@ -125,7 +123,7 @@ namespace DotNetCore.Controllers
         #region Update Product
 
         [HttpPut("UpdateProduct")]
-        public async Task<IActionResult> UpdateProduct(Product product)
+        public async Task<IActionResult> UpdateProduct([FromBody] Product product)
         {
 
             try
@@ -161,7 +159,7 @@ namespace DotNetCore.Controllers
         #region Delete Product
 
         [HttpDelete("DeleteProduct{id}")]
-        public async Task<IActionResult> DeleteProduct(int id)
+        public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
 
             try

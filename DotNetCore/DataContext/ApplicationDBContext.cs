@@ -1,5 +1,6 @@
 ﻿using DotNetCore.ConfigurationClasses;
 using DotNetCore.DataContext;
+using JasperFx.CodeGeneration.Frames;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -49,6 +50,9 @@ namespace DotNetCore.DBContext
             if (_optionsSnapshot.Value.DataBaseType == "sqlServer")
             {
                 modelBuilder.Entity<Product>().ToTable("Products");
+                modelBuilder.Entity<User>().ToTable("Users");
+                modelBuilder.Entity<UserPermission>().ToTable("UserPermissions").HasKey(item => new {item.UserId, item.PermissionId});
+
 
             }
             else if (_optionsSnapshot.Value.DataBaseType == "mongoDb")
@@ -59,6 +63,7 @@ namespace DotNetCore.DBContext
             else if (_optionsSnapshot.Value.DataBaseType == "PostgresDb")
             {
                 modelBuilder.Entity<Product>().ToTable("Products");
+             
 
             }
         }

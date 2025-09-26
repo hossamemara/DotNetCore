@@ -11,6 +11,7 @@ namespace DotNetCore.DI
         {
             For<IWeatherForecast>().Use<WeatherForecastService>().Scoped();
             For<IProducts>().Use<ProductsService>().Scoped();
+            For<IToken>().Use<TokenService>().Scoped();
         }
     }
 }
