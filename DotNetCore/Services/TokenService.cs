@@ -22,10 +22,11 @@ namespace DotNetCore.Services
                 Issuer = optionsSnapshot.Value.Issuer,
                 Audience = optionsSnapshot.Value.Audience,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(optionsSnapshot.Value.SigningKey)), SecurityAlgorithms.HmacSha256),
-                Subject = new ClaimsIdentity(new Claim[]
+                Subject = new ClaimsIdentity(new Claim []
                 {
                     new (ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new (ClaimTypes.Email, request.Email)
+                    new (ClaimTypes.Email, request.Email),
+                    new (ClaimTypes.Role, "Admin")
                 })
 
             };
