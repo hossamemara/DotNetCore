@@ -51,7 +51,9 @@ namespace DotNetCore.DBContext
             {
                 modelBuilder.Entity<Product>().ToTable("Products");
                 modelBuilder.Entity<User>().ToTable("Users");
+                modelBuilder.Entity<Role>().ToTable("Roles");
                 modelBuilder.Entity<UserPermission>().ToTable("UserPermissions").HasKey(item => new {item.UserId, item.PermissionId});
+                modelBuilder.Entity<UserRole>().ToTable("UserRoles").HasKey(item => new { item.UserId, item.RoleId});
 
 
             }

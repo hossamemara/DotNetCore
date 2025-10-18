@@ -23,9 +23,8 @@ namespace DotNetCore.Controllers
 
         #region Get Products
 
-
+        [Authorize(Policy ="USARegionOnly")]
         [HttpGet("GetProducts")]
-        
         public async Task<IActionResult> GetProducts()
         {
             _logger.LogInformation("GetProducts");

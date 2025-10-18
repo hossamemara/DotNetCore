@@ -6,6 +6,6 @@ namespace DotNetCore.Interfaces
 {
     public interface IToken
     {
-        string? GetUserToken(AuthenticationRequest request,User user);
+        TokenResponse GetUserToken(AuthenticationRequest request,User user,List<Role> role);
     }
 }

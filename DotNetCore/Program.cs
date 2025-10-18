@@ -19,7 +19,7 @@ builder.Services.Configure<RateLimit>(builder.Configuration.GetSection("RateLimi
 builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection("ConnectionStrings"));
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("jwtBearer"));
 
-var JwtConfig = builder.Configuration.GetSection("jwtBearer").Get<JwtOptions>();
+var jwtConfig = builder.Configuration.GetSection("jwtBearer").Get<JwtOptions>();
 
 builder.Services.AddAuthentication().AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options=>
 {
@@ -28,11 +28,11 @@ builder.Services.AddAuthentication().AddJwtBearer(JwtBearerDefaults.Authenticati
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
-        ValidIssuer = JwtConfig.Issuer,
+        ValidIssuer = jwtConfig.Issuer,
         ValidateAudience = true,
-        ValidAudience= JwtConfig.Audience,
+        ValidAudience= jwtConfig.Audience,
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtConfig.SigningKey)),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.SigningKey)),
     };
 
 }
@@ -66,6 +66,13 @@ if (connectionString.DataBaseType == "MongoDb")
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi(); // new
 builder.Services.AddSwaggerGen();
+
+// Policy Based
+builder.Services.AddAuthorization(options=>
+{
+    options.AddPolicy("USARegionOnly", builder=> builder.AddRequirements(new USARegionOnlyRequirements()));
+});
+
 
 builder.Host.UseLamar((context, registry) =>
 {

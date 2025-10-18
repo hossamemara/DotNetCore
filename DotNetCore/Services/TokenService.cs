@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver.Linq;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
@@ -14,7 +15,7 @@ namespace DotNetCore.Services
 {
     public class TokenService(IOptionsSnapshot<JwtOptions> optionsSnapshot) : IToken
     {
-        public string? GetUserToken(AuthenticationRequest request, User user)
+        public TokenResponse GetUserToken(AuthenticationRequest request, User user, List<Role> roleNames)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptors = new SecurityTokenDescriptor()
@@ -22,17 +23,20 @@ namespace DotNetCore.Services
                 Issuer = optionsSnapshot.Value.Issuer,
                 Audience = optionsSnapshot.Value.Audience,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(optionsSnapshot.Value.SigningKey)), SecurityAlgorithms.HmacSha256),
-                Subject = new ClaimsIdentity(new Claim []
+                Subject = new ClaimsIdentity(new[]
                 {
-                    new (ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new (ClaimTypes.Email, request.Email),
-                    new (ClaimTypes.Role, "Admin")
-                })
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Email, request.Email),
+                    new Claim(ClaimTypes.Country, user.Country),
+                }.Concat(roleNames.Select(r => new Claim(ClaimTypes.Role, r.RoleName))))
 
             };
+
             var securityToken = tokenHandler.CreateToken(tokenDescriptors);
             var accessToke = tokenHandler.WriteToken(securityToken);
-            return  accessToke;
+            return new TokenResponse { 
+            Token = accessToke           
+            };
         }
     }
 }

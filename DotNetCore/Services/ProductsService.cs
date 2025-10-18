@@ -12,9 +12,9 @@ namespace DotNetCore.Services
 
         #region Get Products
 
-        public async Task<IEnumerable<ProductsCollection>> GetProducts()
+        public async Task<IEnumerable<Product>> GetProducts()
         {
-            var data = await _context.Set<ProductsCollection>().ToListAsync();
+            var data = await _context.Set<Product>().ToListAsync();
             return data;
         }
 

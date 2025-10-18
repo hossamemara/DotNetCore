@@ -34,16 +34,30 @@ namespace DotNetCore.Controllers
                     passwordHash = sha256.ComputeHash(Encoding.UTF8.GetBytes(request.Password));
                 }
 
-                var user = await context.Set<User>().FirstOrDefaultAsync(item => item.Email == request.Email &&  passwordHash.Equals(item.Password)
+                var user = await context.Set<User>().FirstOrDefaultAsync(item => item.Email == request.Email && passwordHash.Equals(item.Password));
+                
 
-                    );
+
                 if (user is null)
                         return Unauthorized(new ApiResponse { StatusCode = 401, AffectedRows = 0, Message = "Unauthorized", HttpStatusCodes = "Unauthorized", ExistanceFlag = false });
                 
                 else
                 {
-                   
-                    var token = _token.GetUserToken(request, user);
+                    var roles = await context.Set<UserRole>().Where(item => item.UserId == user.Id).ToListAsync();
+                    var roleNames = new List<Role> { };
+
+                    foreach (var role in roles)
+                    {
+
+                        var roleName = await context.Set<Role>().FirstOrDefaultAsync(item => item.Id == role.RoleId);
+                        if (!string.IsNullOrEmpty(roleName?.RoleName))
+                        {
+                            roleNames.Add(roleName);
+
+                        }
+                    }
+
+                    var token = _token.GetUserToken(request, user, roleNames);
                     if (token is null)
                         return NotFound(new ApiResponse { StatusCode = 404, AffectedRows = 0, Message = "No Data Found", HttpStatusCodes = "Not Found", ExistanceFlag = false });
                     else
