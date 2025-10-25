@@ -37,7 +37,7 @@ namespace DotNetCore.Services
         public async Task<Product> AddProduct(Product product)
         {
             await _context.Set<Product>().AddAsync(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return product;
         }
 
@@ -49,16 +49,11 @@ namespace DotNetCore.Services
         public async Task<Product?> UpdateProduct(Product product)
         {
             var data = await _context.Set<Product>().FindAsync(product.Id);
-            if (data == null)
-            {
-                return null;
-            }
-            else
+            if (data is not null)
             {
                 data.Name = product.Name;
                 data.Sku = product.Sku;
-                _context.Set<Product>().Update(data);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
             return data;
@@ -71,14 +66,10 @@ namespace DotNetCore.Services
         public async Task<Product?> DeleteProduct(int id)
         {
             var data = await _context.Set<Product>().FindAsync(id);
-            if (data == null)
-            {
-                return null;
-            }
-            else
+            if (data is not null)
             {
                 _context.Set<Product>().Remove(data);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
             return data;

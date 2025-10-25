@@ -1,5 +1,6 @@
 ﻿using DotNetCore.ConfigurationClasses;
 using DotNetCore.DataContext;
+using DotNetCore.FluentAPI;
 using JasperFx.CodeGeneration.Frames;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -16,6 +17,36 @@ namespace DotNetCore.DBContext
         private readonly IOptionsSnapshot<ConnectionStrings> _optionsSnapshot;
         private readonly string? _mongoClient;
         private readonly string? _dbName;
+
+        // create new table Employees
+
+        /* EF core 
+        
+        1. add-migration migrationName
+        2. update-database  & update-database migrationName للرجوع من اول الميجريشن داه 
+        3. rollback all migrations   update-database -migration:0
+        4. mark column as required
+        5. add entity to model
+        6. exclude entity from model 
+        7. change table name
+        8. change schema
+        9. exclude property
+        10. change column name
+        11. change column data types 
+        12. maximum length
+        13. column comment
+        14. set primary key
+        15. change primary key name 
+        16. set composite key
+        17. set default value
+        18. set computed column
+        19. primary key default value 
+        20. one to one relationship
+
+         */
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Blog> Blogs { get; set; } // Parent and its child BlogImage
+        public DbSet<Car> Cars { get; set; } // Parent and its child BlogImage
         public ApplicationDBContext(IOptionsSnapshot<ConnectionStrings> optionsSnapshot)
         {
             _optionsSnapshot = optionsSnapshot;
@@ -49,6 +80,19 @@ namespace DotNetCore.DBContext
 
             if (_optionsSnapshot.Value.DataBaseType == "sqlServer")
             {
+                // fluent api
+                //modelBuilder.Entity<Product>().Property(b => b.Sku).IsRequired();
+                new ProductsEntity().Configure(modelBuilder.Entity<Product>());
+
+                
+                // one to one 
+                modelBuilder.Entity<Blog>().HasOne(item => item.BlogImage).WithOne(item => item.Blog)
+                    .HasForeignKey<BlogImage>(item => item.BlogId);
+
+                // one to many 
+                modelBuilder.Entity<RecordOfSale>().HasOne(item => item.Car).WithMany(item => item.SaleHistory)
+                    .HasForeignKey(item => item.CarId);
+
                 modelBuilder.Entity<Product>().ToTable("Products");
                 modelBuilder.Entity<User>().ToTable("Users");
                 modelBuilder.Entity<Role>().ToTable("Roles");
