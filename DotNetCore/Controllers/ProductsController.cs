@@ -121,6 +121,7 @@ namespace DotNetCore.Controllers
 
         #region Update Product
 
+        [CheckPermission(Permission.UpdateProduct)]
         [HttpPut("UpdateProduct")]
         public async Task<IActionResult> UpdateProduct([FromBody] Product product)
         {
@@ -156,8 +157,8 @@ namespace DotNetCore.Controllers
         #region HttpDelete
 
         #region Delete Product
-
-        [HttpDelete("DeleteProduct{id}")]
+        [CheckPermission(Permission.DeleteProduct)]
+        [HttpDelete("DeleteProduct/{id}")]
         public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
 

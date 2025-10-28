@@ -12,16 +12,12 @@ namespace DotNetCore.ActionFilters
         }
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            _logger.LogInformation(context.ActionDescriptor.ToString());
+            _logger.LogInformation(context.ActionDescriptor.DisplayName);
             if (context.ActionDescriptor.DisplayName == "DotNetCore.Controllers.ProductsController.DeleteProduct (DotNetCore)")
-            {
                 context.Result = new BadRequestResult();
-            }
-            else { 
-            await next();
+            else
+                await next();
 
-            }
-            _logger.LogInformation($"{context.ActionDescriptor.ToString()} Done");
         }
     }
 }

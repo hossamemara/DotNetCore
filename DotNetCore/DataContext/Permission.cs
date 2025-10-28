@@ -1,9 +1,10 @@
 ﻿namespace DotNetCore.DataContext
 {
-    public class Role
+    public class Permission
     {
+
         public int Id { get; set; }
-        public string RoleName { get; set; }
+        public string PermissionName { get; set; }
         public ICollection<User> Users { get; set; }
     }
 }

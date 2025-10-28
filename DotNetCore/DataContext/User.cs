@@ -6,5 +6,7 @@
         public string Email { get; set; }
         public string Country { get; set; }
         public byte[]? Password { get; set; }
+        public ICollection<Role> Roles { get; set; }
+        public ICollection<Permission> Permissions { get; set; }
     }
 }

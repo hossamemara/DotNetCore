@@ -42,11 +42,13 @@ namespace DotNetCore.DBContext
         18. set computed column
         19. primary key default value 
         20. one to one relationship
-
+        21. one to many relationship
          */
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Blog> Blogs { get; set; } // Parent and its child BlogImage
-        public DbSet<Car> Cars { get; set; } // Parent and its child BlogImage
+        public DbSet<Product> Products { get; set; } 
+        public DbSet<Car> Cars { get; set; } 
+        public DbSet<User> Users { get; set; }
         public ApplicationDBContext(IOptionsSnapshot<ConnectionStrings> optionsSnapshot)
         {
             _optionsSnapshot = optionsSnapshot;
@@ -81,10 +83,11 @@ namespace DotNetCore.DBContext
             if (_optionsSnapshot.Value.DataBaseType == "sqlServer")
             {
                 // fluent api
-                //modelBuilder.Entity<Product>().Property(b => b.Sku).IsRequired();
                 new ProductsEntity().Configure(modelBuilder.Entity<Product>());
 
-                
+                new UserEntity().Configure(modelBuilder.Entity<User>());
+
+
                 // one to one 
                 modelBuilder.Entity<Blog>().HasOne(item => item.BlogImage).WithOne(item => item.Blog)
                     .HasForeignKey<BlogImage>(item => item.BlogId);
@@ -93,11 +96,11 @@ namespace DotNetCore.DBContext
                 modelBuilder.Entity<RecordOfSale>().HasOne(item => item.Car).WithMany(item => item.SaleHistory)
                     .HasForeignKey(item => item.CarId);
 
-                modelBuilder.Entity<Product>().ToTable("Products");
-                modelBuilder.Entity<User>().ToTable("Users");
-                modelBuilder.Entity<Role>().ToTable("Roles");
-                modelBuilder.Entity<UserPermission>().ToTable("UserPermissions").HasKey(item => new {item.UserId, item.PermissionId});
-                modelBuilder.Entity<UserRole>().ToTable("UserRoles").HasKey(item => new { item.UserId, item.RoleId});
+               
+
+
+
+
 
 
             }

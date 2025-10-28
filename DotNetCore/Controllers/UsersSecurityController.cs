@@ -43,13 +43,13 @@ namespace DotNetCore.Controllers
                 
                 else
                 {
-                    var roles = await context.Set<UserRole>().Where(item => item.UserId == user.Id).ToListAsync();
+                    var roles = await context.Set<RoleUser>().Where(item => item.UsersId == user.Id).ToListAsync();
                     var roleNames = new List<Role> { };
 
                     foreach (var role in roles)
                     {
 
-                        var roleName = await context.Set<Role>().FirstOrDefaultAsync(item => item.Id == role.RoleId);
+                        var roleName = await context.Set<Role>().FirstOrDefaultAsync(item => item.Id == role.RolesId);
                         if (!string.IsNullOrEmpty(roleName?.RoleName))
                         {
                             roleNames.Add(roleName);

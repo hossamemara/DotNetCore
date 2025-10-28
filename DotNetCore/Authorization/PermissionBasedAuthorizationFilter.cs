@@ -22,7 +22,7 @@ namespace DotNetCore.Authorization
                 else
                 {
                     var UserId = int.Parse(claimIdentity.FindFirst(ClaimTypes.NameIdentifier).Value);
-                    var hasPermission = dBContext.Set<UserPermission>().Any(item => item.UserId == UserId && item.PermissionId == (int)attribute.Permission);
+                    var hasPermission = dBContext.Set<PermissionUser>().Any(item => item.UsersId == UserId && item.PermissionsId == (int)attribute.Permission);
                     if (!hasPermission)
                     {
                         context.Result = new ForbidResult();
