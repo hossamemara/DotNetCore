@@ -18,7 +18,7 @@ namespace DotNetCore.Middleware
         }
         public async Task Invoke(HttpContext context)
         {
-                var localPort = context.Connection.LocalPort.ToString() ?? "unknown";
+            var localPort = context.Connection.LocalPort.ToString() ?? "unknown";
             _counter++;
             if (DateTime.Now.Subtract(_lastRequestDate).Seconds > _optionsSnapshot.Value.Count)
             {

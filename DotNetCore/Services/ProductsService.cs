@@ -21,6 +21,19 @@ namespace DotNetCore.Services
         #endregion
 
 
+        #region Get Products
+
+        public async Task<Product?> GetWithLinq(Product product)
+        {
+            //var data = await _context.Set<Product>().SingleOrDefaultAsync(item=>item.Id == product.Id);
+            var data = await _context.Set<Product>().FirstOrDefaultAsync(item=>item.Id == product.Id);
+            //var data = await _context.Set<Product>().FindAsync(product.Id);
+            return data;
+        }
+
+        #endregion
+
+
         #region Get Products By Filter
 
         public async Task<Product?> GetProductsByFilter(int id)

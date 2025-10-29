@@ -6,6 +6,7 @@ using DotNetCore.Helpers;
 using DotNetCore.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace DotNetCore.Controllers
 {
@@ -51,6 +52,39 @@ namespace DotNetCore.Controllers
 
 
         #endregion
+
+
+        #region Get Products
+
+        [Authorize(Policy = "USARegionOnly")]
+        [HttpPost("GetWithLinq")]
+        public async Task<IActionResult> GetWithLinq(Product product)
+        {
+            _logger.LogInformation("GetWithLinq");
+            try
+            {
+                var data = await _products.GetWithLinq(product);
+                if (data is not null)
+                {
+                    return Ok(new ApiResponse { Data = data, StatusCode = 200, AffectedRows = 1, Message = "Data Found", HttpStatusCodes = "Success", ExistanceFlag = true });
+                }
+                else
+                {
+                    return NotFound(new ApiResponse { StatusCode = 404, AffectedRows = 0, Message = "No Data Found", HttpStatusCodes = "Not Found", ExistanceFlag = false });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message.ToString());
+                return BadRequest(new ApiResponse { Error = ex.Message.ToString(), StatusCode = 400, HttpStatusCodes = "Bad Request" });
+            }
+
+
+        }
+
+
+        #endregion
+
 
 
         #region Get GetProducts By Filter

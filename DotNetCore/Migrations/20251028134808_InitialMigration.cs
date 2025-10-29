@@ -71,7 +71,7 @@ namespace DotNetCore.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Sku = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, defaultValue: "123")
+                    Sku = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -152,12 +152,12 @@ namespace DotNetCore.Migrations
                 name: "PermissionUser",
                 columns: table => new
                 {
-                    PermissionsId = table.Column<int>(type: "int", nullable: false),
-                    UsersId = table.Column<int>(type: "int", nullable: false)
+                    UsersId = table.Column<int>(type: "int", nullable: false),
+                    PermissionsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PermissionUser", x => new { x.PermissionsId, x.UsersId });
+                    table.PrimaryKey("PK_PermissionUser", x => new { x.UsersId, x.PermissionsId });
                     table.ForeignKey(
                         name: "FK_PermissionUser_Permission_PermissionsId",
                         column: x => x.PermissionsId,
@@ -176,12 +176,12 @@ namespace DotNetCore.Migrations
                 name: "RoleUser",
                 columns: table => new
                 {
-                    RolesId = table.Column<int>(type: "int", nullable: false),
-                    UsersId = table.Column<int>(type: "int", nullable: false)
+                    UsersId = table.Column<int>(type: "int", nullable: false),
+                    RolesId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoleUser", x => new { x.RolesId, x.UsersId });
+                    table.PrimaryKey("PK_RoleUser", x => new { x.UsersId, x.RolesId });
                     table.ForeignKey(
                         name: "FK_RoleUser_Role_RolesId",
                         column: x => x.RolesId,
@@ -203,9 +203,9 @@ namespace DotNetCore.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_PermissionUser_UsersId",
+                name: "IX_PermissionUser_PermissionsId",
                 table: "PermissionUser",
-                column: "UsersId");
+                column: "PermissionsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RecordOfSale_CarId",
@@ -213,9 +213,9 @@ namespace DotNetCore.Migrations
                 column: "CarId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoleUser_UsersId",
+                name: "IX_RoleUser_RolesId",
                 table: "RoleUser",
-                column: "UsersId");
+                column: "RolesId");
         }
 
         /// <inheritdoc />

@@ -1,5 +1,9 @@
-﻿namespace DotNetCore.DataContext
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace DotNetCore.DataContext
 {
+    [Index(nameof(Email),IsUnique =true)]
+    // [Index(nameof(Email), nameof(Country))]
     public class User
     {
         public int Id { get; set; }

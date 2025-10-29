@@ -2,7 +2,6 @@
 using DotNetCore.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Reflection.Emit;
 
 namespace DotNetCore.FluentAPI
 {
@@ -10,7 +9,10 @@ namespace DotNetCore.FluentAPI
     {
         public void Configure(EntityTypeBuilder<User> options)
         {
-         
+
+            //fluent api create index  options.HasIndex(item => item.Email);
+
+            options.HasIndex(item => new { item.Email, item.Country }).IsUnique();
             // Role vs Users Many to Many
             options.HasMany(u => u.Roles)
             .WithMany(r => r.Users)

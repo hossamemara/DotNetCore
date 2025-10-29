@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DotNetCore.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20251028073022_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20251028143830_IDX_UserEmailCountryUnique")]
+    partial class IDX_UserEmailCountryUnique
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,14 +39,12 @@ namespace DotNetCore.Migrations
 
                     b.Property<string>("Sku")
                         .IsRequired()
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasDefaultValue("123");
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("DotNetCore.DataContext.Blog", b =>
@@ -147,6 +145,21 @@ namespace DotNetCore.Migrations
                     b.ToTable("Permission");
                 });
 
+            modelBuilder.Entity("DotNetCore.DataContext.PermissionUser", b =>
+                {
+                    b.Property<int>("UsersId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PermissionsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UsersId", "PermissionsId");
+
+                    b.HasIndex("PermissionsId");
+
+                    b.ToTable("PermissionUser", (string)null);
+                });
+
             modelBuilder.Entity("DotNetCore.DataContext.RecordOfSale", b =>
                 {
                     b.Property<int>("Id")
@@ -188,6 +201,21 @@ namespace DotNetCore.Migrations
                     b.ToTable("Role");
                 });
 
+            modelBuilder.Entity("DotNetCore.DataContext.RoleUser", b =>
+                {
+                    b.Property<int>("UsersId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RolesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UsersId", "RolesId");
+
+                    b.HasIndex("RolesId");
+
+                    b.ToTable("RoleUser", (string)null);
+                });
+
             modelBuilder.Entity("DotNetCore.DataContext.User", b =>
                 {
                     b.Property<int>("Id")
@@ -198,48 +226,24 @@ namespace DotNetCore.Migrations
 
                     b.Property<string>("Country")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<byte[]>("Password")
                         .HasColumnType("varbinary(max)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Email", "Country")
+                        .IsUnique();
+
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("PermissionUser", b =>
-                {
-                    b.Property<int>("PermissionsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PermissionsId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("PermissionUser");
-                });
-
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.Property<int>("RolesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RolesId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("RoleUser", (string)null);
                 });
 
             modelBuilder.Entity("DotNetCore.DataContext.BlogImage", b =>
@@ -253,6 +257,25 @@ namespace DotNetCore.Migrations
                     b.Navigation("Blog");
                 });
 
+            modelBuilder.Entity("DotNetCore.DataContext.PermissionUser", b =>
+                {
+                    b.HasOne("DotNetCore.DataContext.Permission", "Permission")
+                        .WithMany()
+                        .HasForeignKey("PermissionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DotNetCore.DataContext.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("DotNetCore.DataContext.RecordOfSale", b =>
                 {
                     b.HasOne("DotNetCore.DataContext.Car", "Car")
@@ -264,34 +287,23 @@ namespace DotNetCore.Migrations
                     b.Navigation("Car");
                 });
 
-            modelBuilder.Entity("PermissionUser", b =>
+            modelBuilder.Entity("DotNetCore.DataContext.RoleUser", b =>
                 {
-                    b.HasOne("DotNetCore.DataContext.Permission", null)
-                        .WithMany()
-                        .HasForeignKey("PermissionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DotNetCore.DataContext.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.HasOne("DotNetCore.DataContext.Role", null)
+                    b.HasOne("DotNetCore.DataContext.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RolesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DotNetCore.DataContext.User", null)
+                    b.HasOne("DotNetCore.DataContext.User", "User")
                         .WithMany()
                         .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DotNetCore.DataContext.Blog", b =>

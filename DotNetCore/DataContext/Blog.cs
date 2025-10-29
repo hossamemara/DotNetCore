@@ -7,7 +7,7 @@ namespace DotNetCore.DataContext
     public class Blog
     {
         public int Id { get; set; }
-        public int Url { get; set; }
+        public string Url { get; set; }
         public BlogImage BlogImage { get; set; }
     }
 }

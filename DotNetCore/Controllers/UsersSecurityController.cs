@@ -39,7 +39,7 @@ namespace DotNetCore.Controllers
 
 
                 if (user is null)
-                        return Unauthorized(new ApiResponse { StatusCode = 401, AffectedRows = 0, Message = "Unauthorized", HttpStatusCodes = "Unauthorized", ExistanceFlag = false });
+                        return Unauthorized(new ApiResponse { StatusCode = 401, AffectedRows = 0, Message = "Incorrect Email or Password", HttpStatusCodes = "Unauthorized", ExistanceFlag = false });
                 
                 else
                 {

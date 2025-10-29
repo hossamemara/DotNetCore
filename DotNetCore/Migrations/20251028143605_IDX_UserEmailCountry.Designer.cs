@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DotNetCore.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20251028093810_productsRemoveDefaultSKU")]
-    partial class productsRemoveDefaultSKU
+    [Migration("20251028143605_IDX_UserEmailCountry")]
+    partial class IDX_UserEmailCountry
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -226,16 +226,20 @@ namespace DotNetCore.Migrations
 
                     b.Property<string>("Country")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<byte[]>("Password")
                         .HasColumnType("varbinary(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email");
+
+                    b.HasIndex("Email", "Country");
 
                     b.ToTable("Users");
                 });

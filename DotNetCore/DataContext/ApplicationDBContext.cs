@@ -43,12 +43,25 @@ namespace DotNetCore.DBContext
         19. primary key default value 
         20. one to one relationship
         21. one to many relationship
+        22. many to many relationship
+        23. Indexes  -- by default added to foreign keys
+        24. composite Index
+        25. Unique Index
+        26. Global Sequence on Column on All Tables  
+        27. Data Seeding (Dummy Data)
+        27. Linq select all and select one  .ToListAsync()   .Find(1)  by primary key
+        28. Linq select one  .Single() // has exception if no data found or more than row found  
+        .SingleOrDefault()  top 1 
+
          */
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Blog> Blogs { get; set; } // Parent and its child BlogImage
         public DbSet<Product> Products { get; set; } 
         public DbSet<Car> Cars { get; set; } 
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderNew> OrdersNew { get; set; }
         public ApplicationDBContext(IOptionsSnapshot<ConnectionStrings> optionsSnapshot)
         {
             _optionsSnapshot = optionsSnapshot;
@@ -82,10 +95,17 @@ namespace DotNetCore.DBContext
 
             if (_optionsSnapshot.Value.DataBaseType == "sqlServer")
             {
+                // data seeding
+                modelBuilder.Entity<Blog>().HasData(new Blog { Id = 1,Url = "www.google.com"});
                 // fluent api
                 new ProductsEntity().Configure(modelBuilder.Entity<Product>());
 
                 new UserEntity().Configure(modelBuilder.Entity<User>());
+
+                //Global Sequence on Column on All Tables
+                modelBuilder.HasSequence<int>("OrderNumber");
+                modelBuilder.Entity<Order>().Property(o=>o.OrderNumber).HasDefaultValueSql("NEXT VALUE FOR OrderNumber");
+                modelBuilder.Entity<OrderNew>().Property(o=>o.OrderNumber).HasDefaultValueSql("NEXT VALUE FOR OrderNumber");
 
 
                 // one to one 

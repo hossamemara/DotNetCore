@@ -4,6 +4,7 @@ using DotNetCore.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DotNetCore.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20251028150631_orderSequence")]
+    partial class orderSequence
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,20 +57,12 @@ namespace DotNetCore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Url")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.ToTable("Blogs");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Url = "www.google.com"
-                        });
                 });
 
             modelBuilder.Entity("DotNetCore.DataContext.BlogImage", b =>
@@ -153,7 +148,7 @@ namespace DotNetCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("DotNetCore.DataContext.OrderNew", b =>
@@ -174,7 +169,7 @@ namespace DotNetCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OrdersNew");
+                    b.ToTable("OrderNew");
                 });
 
             modelBuilder.Entity("DotNetCore.DataContext.Permission", b =>
@@ -247,7 +242,7 @@ namespace DotNetCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Role");
                 });
 
             modelBuilder.Entity("DotNetCore.DataContext.RoleUser", b =>
