@@ -21,7 +21,7 @@ namespace DotNetCore.Services
         #endregion
 
 
-        #region Get Products
+        #region Get GetWithLinq
 
         public async Task<Product?> GetWithLinq(Product product)
         {
